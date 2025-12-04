@@ -14,7 +14,7 @@ $csrfToken = Helper::generateCsrfToken();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Parent Area</title>
-  <link rel="stylesheet" href="assets/css/profile.css">
+  <link rel="stylesheet" href="<?php echo Helper::url('assets/css/profile.css'); ?>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     .navbar {
@@ -176,7 +176,7 @@ $csrfToken = Helper::generateCsrfToken();
         <a href="#" class="dropdown-item" onclick="showProfileModal(); return false;">
           <i class="fas fa-user"></i> Profile
         </a>
-        <a href="logout" class="dropdown-item danger">
+        <a href="<?php echo Helper::url('logout'); ?>" class="dropdown-item danger">
           <i class="fas fa-sign-out-alt"></i> Logout
         </a>
       </div>
@@ -240,7 +240,7 @@ $csrfToken = Helper::generateCsrfToken();
 
         <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
 
-        <a href="logout" class="btn btn-danger" style="width: 100%; text-align: center; display: block; background: #dc3545; color: white; text-decoration: none;">
+        <a href="<?php echo Helper::url('logout'); ?>" class="btn btn-danger" style="width: 100%; text-align: center; display: block; background: #dc3545; color: white; text-decoration: none;">
           <i class="fas fa-sign-out-alt"></i> Logout
         </a>
       </div>

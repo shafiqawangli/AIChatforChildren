@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $_SESSION['errors'] = $v->errors();
             }
-            header("Location: /admin/profile");
+            header("Location: " . Helper::url('admin/profile'));
             exit;
         } elseif ($_POST['action'] === 'update-password') {
             $currentPassword = $_POST['current_password'];
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $_SESSION['errors'] = $v->errors();
             }
-            header("Location: /admin/profile");
+            header("Location: " . Helper::url('admin/profile'));
             exit;
         }
     }
@@ -88,7 +88,7 @@ $currentUserData = $stmt->fetch(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Profile Settings</title>
-    <link rel="stylesheet" href="/assets/css/admin.css">
+    <link rel="stylesheet" href="<?php echo Helper::url('assets/css/admin.css'); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
@@ -111,37 +111,37 @@ $currentUserData = $stmt->fetch(PDO::FETCH_ASSOC);
             <nav class="sidebar-nav">
                 <ul>
                     <li class="nav-item">
-                        <a href="/admin-dashboard" class="nav-link">
+                        <a href="<?php echo Helper::url('admin-dashboard'); ?>" class="nav-link">
                             <i class="fas fa-tachometer-alt"></i>
                             Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/admin/prompts" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/prompts'); ?>" class="nav-link">
                             <i class="fas fa-edit"></i>
                             Prompt Templates
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/admin/users" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/users'); ?>" class="nav-link">
                             <i class="fas fa-users"></i>
                             User Management
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/admin/knowledge" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/knowledge'); ?>" class="nav-link">
                             <i class="fas fa-database"></i>
                             Knowledge Base
                         </a>
                     </li>
                     <li class="nav-item active">
-                        <a href="/admin/profile" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/profile'); ?>" class="nav-link">
                             <i class="fas fa-user-cog"></i>
                             Profile Settings
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/logout" class="nav-link logout">
+                        <a href="<?php echo Helper::url('logout'); ?>" class="nav-link logout">
                             <i class="fas fa-sign-out-alt"></i>
                             Logout
                         </a>
@@ -211,7 +211,7 @@ $currentUserData = $stmt->fetch(PDO::FETCH_ASSOC);
             <!-- Update Profile Form -->
             <div class="content-section">
                 <h2><i class="fas fa-user-edit"></i> Update Profile</h2>
-                <form method="POST" action="/admin/profile" class="profile-form">
+                <form method="POST" action="<?php echo Helper::url('admin/profile'); ?>" class="profile-form">
                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
                     <input type="hidden" name="action" value="update-profile">
 
@@ -235,7 +235,7 @@ $currentUserData = $stmt->fetch(PDO::FETCH_ASSOC);
             <!-- Change Password Form -->
             <div class="content-section">
                 <h2><i class="fas fa-key"></i> Change Password</h2>
-                <form method="POST" action="/admin/profile" class="password-form">
+                <form method="POST" action="<?php echo Helper::url('admin/profile'); ?>" class="password-form">
                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
                     <input type="hidden" name="action" value="update-password">
 

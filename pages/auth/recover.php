@@ -17,7 +17,7 @@ $email = $_SESSION['email'] ?? null;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recover Password</title>
-    <link rel="stylesheet" href="assets/css/auth_styles.css">
+    <link rel="stylesheet" href="<?php echo Helper::url('assets/css/auth_styles.css'); ?>">
 </head>
 
 <body>
@@ -46,7 +46,7 @@ $email = $_SESSION['email'] ?? null;
 
             <?php if ($verified): ?>
 
-                <form action="reset-password" method="POST">
+                <form action="<?php echo Helper::url('reset-password'); ?>" method="POST">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
 
                     <input type="hidden" name="identifier" value="<?= $email ?>">
@@ -64,7 +64,7 @@ $email = $_SESSION['email'] ?? null;
 
                 </form>
             <?php else: ?>
-                <form action="reset-password" method="POST">
+                <form action="<?php echo Helper::url('reset-password'); ?>" method="POST">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
 
                     <div class="input-group">
@@ -75,7 +75,7 @@ $email = $_SESSION['email'] ?? null;
             <?php endif ?>
 
             <div class="register">
-                Remembered your password? <a href="sign-in">Sign In</a>
+                Remembered your password? <a href="<?php echo Helper::url('sign-in'); ?>">Sign In</a>
             </div>
         </div>
     </div>

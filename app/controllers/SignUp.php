@@ -37,7 +37,7 @@ class SignUp
         if (!$v->validate()) {
             $_SESSION['errors'] = $v->errors(); // Store errors in session
             $_SESSION['old'] = $_POST; // Store old input values
-            header("Location: sign-up"); // Redirect back to form
+            header("Location: " . Helper::url('sign-up')); // Redirect back to form
             exit;
         }
 
@@ -55,7 +55,7 @@ class SignUp
         if ($user->emailExists($email)) {
             $_SESSION['errors']['email'][] = "Email is already registered!";
             $_SESSION['old'] = $_POST;
-            header("Location: sign-up");
+            header("Location: " . Helper::url('sign-up'));
             exit;
         }
 
@@ -81,7 +81,7 @@ class SignUp
             }
         } else {
             $_SESSION['errors']['general'][] = "Something went wrong!";
-            header("Location: sign-up");
+            header("Location: " . Helper::url('sign-up'));
         }
         exit;
     }

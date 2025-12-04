@@ -33,8 +33,27 @@ class Helper
      */
     public static function redirect($url)
     {
-        header("Location: " . $url);
+        header("Location: " . self::url($url));
         exit;
+    }
+
+    /**
+     * Generate a URL with the base path.
+     *
+     * @param string $path The path to append to base URL
+     * @return string The complete URL
+     */
+    public static function url($path = '')
+    {
+        $baseUrl = \Core\Config::get('base_url', '/');
+
+        // Remove leading slash from path if present
+        $path = ltrim($path, '/');
+
+        // Ensure base URL ends with /
+        $baseUrl = rtrim($baseUrl, '/') . '/';
+
+        return $baseUrl . $path;
     }
 
     /**

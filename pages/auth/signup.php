@@ -12,7 +12,7 @@ $csrfToken = Helper::generateCsrfToken();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <link rel="stylesheet" href="assets/css/auth_styles.css">
+    <link rel="stylesheet" href="<?php echo Helper::url('assets/css/auth_styles.css'); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
@@ -32,7 +32,7 @@ $csrfToken = Helper::generateCsrfToken();
                 </div>
             <?php endif; ?>
 
-            <form action="sign-up" method="POST">
+            <form action="<?php echo Helper::url('sign-up'); ?>" method="POST">
                 <!-- CSRF Token for security -->
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
 
@@ -83,12 +83,12 @@ $csrfToken = Helper::generateCsrfToken();
 
             <!-- Sign In Link -->
             <div class="register">
-                Already have an account? <a href=" ">Sign In</a>
+                Already have an account? <a href="<?php echo Helper::url('sign-in'); ?>">Sign In</a>
             </div>
         </div>
     </div>
 
-    <script src="assets/javascript/main.js"></script>
+    <script src="<?php echo Helper::url('assets/javascript/main.js'); ?>"></script>
 </body>
 
 </html>

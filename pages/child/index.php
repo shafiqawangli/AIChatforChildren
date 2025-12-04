@@ -21,7 +21,7 @@ include("connect.php");
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,maximum-scale=1,user-scalable=no" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-    <link rel="stylesheet" href="/pages/child/style.css">
+    <link rel="stylesheet" href="<?php echo Helper::url('assets/css/child.css'); ?>">
 </head>
 
 <body>
@@ -83,7 +83,7 @@ include("connect.php");
             <i class="fas fa-chevron-down" style="margin-left: 8px; color: white;"></i>
             <div class="dropdown" id="profileDropdown">
                 <button onclick="showChildProfileModal()"><i class="fas fa-user"></i> Profile</button>
-                <a href="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                <a href="<?php echo Helper::url('logout'); ?>"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
     </div>
@@ -124,7 +124,7 @@ include("connect.php");
         <div class="header">
             <span id="chat-title">Bitty Chat</span>
             <div class="logout-link" style="display: none;">
-                <a href="logout.php" id="logout-link">Logout</a>
+                <a href="<?php echo Helper::url('logout'); ?>" id="logout-link">Logout</a>
             </div>
 
         </div>
@@ -200,7 +200,7 @@ include("connect.php");
 
                 <div class="profile-divider"></div>
 
-                <a href="logout" class="profile-btn profile-btn-logout">
+                <a href="<?php echo Helper::url('logout'); ?>" class="profile-btn profile-btn-logout">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
             </div>

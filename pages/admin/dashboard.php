@@ -29,7 +29,7 @@ $adminUsers = $adminUsersStmt->fetch()['total'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="/assets/css/admin.css">
+    <link rel="stylesheet" href="<?php echo Helper::url('assets/css/admin.css'); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
@@ -52,37 +52,37 @@ $adminUsers = $adminUsersStmt->fetch()['total'];
             <nav class="sidebar-nav">
                 <ul>
                     <li class="nav-item active">
-                        <a href="/admin-dashboard" class="nav-link">
+                        <a href="<?php echo Helper::url('admin-dashboard'); ?>" class="nav-link">
                             <i class="fas fa-tachometer-alt"></i>
                             Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/admin/prompts" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/prompts'); ?>" class="nav-link">
                             <i class="fas fa-edit"></i>
                             Prompt Templates
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/admin/users" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/users'); ?>" class="nav-link">
                             <i class="fas fa-users"></i>
                             User Management
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/admin/knowledge" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/knowledge'); ?>" class="nav-link">
                             <i class="fas fa-database"></i>
                             Knowledge Base
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/admin/profile" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/profile'); ?>" class="nav-link">
                             <i class="fas fa-user-cog"></i>
                             Profile Settings
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/logout" class="nav-link logout">
+                        <a href="<?php echo Helper::url('logout'); ?>" class="nav-link logout">
                             <i class="fas fa-sign-out-alt"></i>
                             Logout
                         </a>
@@ -145,7 +145,7 @@ $adminUsers = $adminUsersStmt->fetch()['total'];
         </div>
     </div>
 
-    <script src="/assets/javascript/main.js"></script>
+    <script src="<?php echo Helper::url('assets/javascript/main.js'); ?>"></script>
     <script>
         // Set active navigation item
         document.addEventListener('DOMContentLoaded', function() {

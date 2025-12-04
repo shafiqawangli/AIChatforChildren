@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $stmt->execute([$name, $category, $content, $description, $isActive, $promptId]);
 
         $_SESSION['success_message'] = "Prompt template updated successfully!";
-        header("Location: /admin/prompts");
+        header("Location: " . Helper::url('admin/prompts'));
         exit;
     } elseif ($_POST['action'] === 'create') {
         $name = $_POST['name'];
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $stmt->execute([$name, $category, $content, $description, $isActive]);
 
         $_SESSION['success_message'] = "Prompt template created successfully!";
-        header("Location: /admin/prompts");
+        header("Location: " . Helper::url('admin/prompts'));
         exit;
     } elseif ($_POST['action'] === 'delete' && !empty($_POST['prompt_id'])) {
         $promptId = $_POST['prompt_id'];
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $stmt->execute([$promptId]);
 
         $_SESSION['success_message'] = "Prompt template deleted successfully!";
-        header("Location: /admin/prompts");
+        header("Location: " . Helper::url('admin/prompts'));
         exit;
     }
 }
@@ -83,7 +83,7 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
     $editingPrompt = $stmt->fetch();
     if (!$editingPrompt) {
         $_SESSION['error_message'] = "Prompt template not found!";
-        header("Location: /admin/prompts");
+        header("Location: " . Helper::url('admin/prompts'));
         exit;
     }
 }
@@ -104,7 +104,7 @@ foreach ($prompts as $prompt) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prompt Templates - Admin</title>
-    <link rel="stylesheet" href="/assets/css/admin.css">
+    <link rel="stylesheet" href="<?php echo Helper::url('assets/css/admin.css'); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
@@ -127,37 +127,37 @@ foreach ($prompts as $prompt) {
             <nav class="sidebar-nav">
                 <ul>
                     <li class="nav-item">
-                        <a href="/admin-dashboard" class="nav-link">
+                        <a href="<?php echo Helper::url('admin-dashboard'); ?>" class="nav-link">
                             <i class="fas fa-tachometer-alt"></i>
                             Dashboard
                         </a>
                     </li>
                     <li class="nav-item active">
-                        <a href="/admin/prompts" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/prompts'); ?>" class="nav-link">
                             <i class="fas fa-edit"></i>
                             Prompt Templates
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/admin/users" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/users'); ?>" class="nav-link">
                             <i class="fas fa-users"></i>
                             User Management
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/admin/knowledge" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/knowledge'); ?>" class="nav-link">
                             <i class="fas fa-database"></i>
                             Knowledge Base
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/admin/profile" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/profile'); ?>" class="nav-link">
                             <i class="fas fa-user-cog"></i>
                             Profile Settings
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/logout" class="nav-link logout">
+                        <a href="<?php echo Helper::url('logout'); ?>" class="nav-link logout">
                             <i class="fas fa-sign-out-alt"></i>
                             Logout
                         </a>
@@ -249,7 +249,7 @@ foreach ($prompts as $prompt) {
                                 <i class="fas fa-save"></i>
                                 <?php echo $editingPrompt ? 'Update' : 'Create'; ?> Template
                             </button>
-                            <a href="/admin/prompts" class="btn btn-secondary">
+                            <a href="<?php echo Helper::url('admin/prompts'); ?>" class="btn btn-secondary">
                                 <i class="fas fa-times"></i>
                                 Cancel
                             </a>
@@ -262,7 +262,7 @@ foreach ($prompts as $prompt) {
             <div class="content-section">
                 <div class="section-header">
                     <h2>All Templates</h2>
-                    <a href="/admin/prompts?new=1" class="btn btn-primary">
+                    <a href="<?php echo Helper::url('admin/prompts?new=1'); ?>" class="btn btn-primary">
                         <i class="fas fa-plus"></i>
                         New Template
                     </a>

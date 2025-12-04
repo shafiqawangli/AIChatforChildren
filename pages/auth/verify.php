@@ -15,7 +15,7 @@ $email = $_SESSION['verification_email'] ?? null;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Verification</title>
-    <link rel="stylesheet" href="assets/css/auth_styles.css">
+    <link rel="stylesheet" href="<?php echo Helper::url('assets/css/auth_styles.css'); ?>">
 
 </head>
 
@@ -41,7 +41,7 @@ $email = $_SESSION['verification_email'] ?? null;
                     <p class="success"><?= htmlspecialchars($_SESSION['success']); ?></p>
                 </div>
             <?php endif ?>
-            <form action="verify-email" method="POST">
+            <form action="<?php echo Helper::url('verify-email'); ?>" method="POST">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
 
                 <div class="input-group">
@@ -52,7 +52,7 @@ $email = $_SESSION['verification_email'] ?? null;
             </form>
             <div class="register">
                 Didn't receive the code?
-                <form action="verify-email" method="POST">
+                <form action="<?php echo Helper::url('verify-email'); ?>" method="POST">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
 
                     <input type="hidden" name="email" value="<?= htmlspecialchars($email) ?>">

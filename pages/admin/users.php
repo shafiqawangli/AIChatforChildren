@@ -28,7 +28,7 @@ if ($deleteUserId && is_numeric($deleteUserId)) {
     } catch (Exception $e) {
         $_SESSION['error_message'] = "Error deleting user: " . $e->getMessage();
     }
-    header("Location: /admin/users");
+    header("Location: " . Helper::url('admin/users'));
     exit;
 }
 
@@ -41,7 +41,7 @@ if ($editUserId && is_numeric($editUserId)) {
 
     if (!$editUser) {
         $_SESSION['error_message'] = "User not found!";
-        header("Location: /admin/users");
+        header("Location: " . Helper::url('admin/users'));
         exit;
     }
 }
@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute($values);
 
                 $_SESSION['success_message'] = "User updated successfully!";
-                header("Location: /admin/users");
+                header("Location: " . Helper::url('admin/users'));
                 exit;
             }
         } catch (Exception $e) {
@@ -138,7 +138,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management - Admin</title>
-    <link rel="stylesheet" href="/assets/css/admin.css">
+    <link rel="stylesheet" href="<?php echo Helper::url('assets/css/admin.css'); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
@@ -161,37 +161,37 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <nav class="sidebar-nav">
                 <ul>
                     <li class="nav-item">
-                        <a href="/admin-dashboard" class="nav-link">
+                        <a href="<?php echo Helper::url('admin-dashboard'); ?>" class="nav-link">
                             <i class="fas fa-tachometer-alt"></i>
                             Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/admin/prompts" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/prompts'); ?>" class="nav-link">
                             <i class="fas fa-edit"></i>
                             Prompt Templates
                         </a>
                     </li>
                     <li class="nav-item active">
-                        <a href="/admin/users" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/users'); ?>" class="nav-link">
                             <i class="fas fa-users"></i>
                             User Management
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/admin/knowledge" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/knowledge'); ?>" class="nav-link">
                             <i class="fas fa-database"></i>
                             Knowledge Base
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/admin/profile" class="nav-link">
+                        <a href="<?php echo Helper::url('admin/profile'); ?>" class="nav-link">
                             <i class="fas fa-user-cog"></i>
                             Profile Settings
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/logout" class="nav-link logout">
+                        <a href="<?php echo Helper::url('logout'); ?>" class="nav-link logout">
                             <i class="fas fa-sign-out-alt"></i>
                             Logout
                         </a>
@@ -228,7 +228,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php if (!$editUser): ?>
                 <div class="content-section">
                     <div class="search-bar">
-                        <form method="GET" action="/admin/users" class="search-form">
+                        <form method="GET" action="<?php echo Helper::url('admin/users'); ?>" class="search-form">
                             <div class="search-input">
                                 <input type="text" name="search" placeholder="Search users by name or email..."
                                        value="<?php echo htmlspecialchars($search); ?>">
@@ -238,7 +238,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </button>
                             </div>
                             <?php if (!empty($search)): ?>
-                                <a href="/admin/users" class="btn btn-secondary">
+                                <a href="<?php echo Helper::url('admin/users'); ?>" class="btn btn-secondary">
                                     <i class="fas fa-times"></i>
                                     Clear
                                 </a>
@@ -252,7 +252,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php if ($editUser): ?>
                 <div class="content-section">
                     <h2>Edit User: <?php echo htmlspecialchars($editUser['name']); ?></h2>
-                    <form method="POST" action="/admin/users" class="user-form">
+                    <form method="POST" action="<?php echo Helper::url('admin/users'); ?>" class="user-form">
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
                         <input type="hidden" name="action" value="update_user">
                         <input type="hidden" name="user_id" value="<?php echo $editUser['id']; ?>">
@@ -301,7 +301,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <i class="fas fa-save"></i>
                                 Update User
                             </button>
-                            <a href="/admin/users" class="btn btn-secondary">
+                            <a href="<?php echo Helper::url('admin/users'); ?>" class="btn btn-secondary">
                                 <i class="fas fa-times"></i>
                                 Cancel
                             </a>

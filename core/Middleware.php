@@ -2,6 +2,7 @@
 
 namespace Core;
 
+use Utils\Helper;
 
 class Middleware
 {
@@ -13,7 +14,7 @@ class Middleware
     {
         if (!isset($_SESSION['user'])) {
             // $_SESSION['errors']['auth'][] = "You must be signed in to access this page.";
-            header("Location: sign-in");
+            header("Location: " . Helper::url('sign-in'));
             exit;
         }
 
@@ -31,16 +32,16 @@ class Middleware
             $role = $_SESSION['user']['role'];
             switch ($role) {
                 case 'admin':
-                    header("Location: admin-dashboard");
+                    header("Location: " . Helper::url('admin-dashboard'));
                     break;
                 case 'parent':
-                    header("Location: parent");
+                    header("Location: " . Helper::url('parent'));
                     break;
                 case 'child':
-                    header("Location: child");
+                    header("Location: " . Helper::url('child'));
                     break;
                 default:
-                    header("Location: home");
+                    header("Location: " . Helper::url('home'));
                     break;
             }
             exit;
@@ -54,7 +55,7 @@ class Middleware
     public static function requireAdmin()
     {
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
-            header("Location: home");
+            header("Location: " . Helper::url('home'));
             exit;
         }
     }
@@ -66,7 +67,7 @@ class Middleware
     public static function requireParent()
     {
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'parent') {
-            header("Location: home");
+            header("Location: " . Helper::url('home'));
             exit;
         }
     }
@@ -78,7 +79,7 @@ class Middleware
     public static function requireChild()
     {
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'child') {
-            header("Location: home");
+            header("Location: " . Helper::url('home'));
             exit;
         }
     }
@@ -95,7 +96,7 @@ class Middleware
         ) {
             session_unset();
             session_destroy();
-            header("Location: sign-in");
+            header("Location: " . Helper::url('sign-in'));
             exit;
         }
 
@@ -106,7 +107,7 @@ class Middleware
         session_unset();
         session_destroy();
         setcookie("remember_me", "", time() - 3600, "/", "", true, true);
-        header("Location: sign-in");
+        header("Location: " . Helper::url('sign-in'));
         exit;
     }
 }

@@ -1,13 +1,18 @@
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
-# Ensure the request is not for an existing file or directory
+# Set the base directory for rewrites
+RewriteBase /AIChatforChildren/
 
+# Allow access to static files (CSS, JS, images, etc.)
+RewriteCond %{REQUEST_URI} \.(css|js|jpg|jpeg|png|gif|svg|ico|woff|woff2|ttf|eot)$ [NC]
+RewriteRule ^ - [L]
+
+# Ensure the request is not for an existing file or directory
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
 # Redirect all requests to index.php
-
 RewriteRule ^(.*)$ index.php [QSA,L]
 
 </IfModule>
