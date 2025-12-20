@@ -7,6 +7,7 @@ use App\Controllers\VerifyEmail;
 use App\Controllers\SignUp;
 use App\Controllers\SignIn;
 use App\Controllers\UpdateProfile;
+use App\Controllers\KnowledgeController;
 use Utils\Helper;
 
 use Bramus\Router\Router;
@@ -134,6 +135,51 @@ class AppRouter
             Middleware::requireAuth();
             Middleware::requireAdmin();
             require __DIR__ . '/../pages/admin/profile.php';
+        });
+
+        // Knowledge Base API routes
+        $router->get('/api/knowledge/health', function () {
+            $controller = new KnowledgeController();
+            $controller->health();
+        });
+
+        $router->get('/api/knowledge/files', function () {
+            Middleware::requireAuth();
+            Middleware::requireAdmin();
+            $controller = new KnowledgeController();
+            $controller->listFiles();
+        });
+
+        $router->post('/api/knowledge/upload', function () {
+            Middleware::requireAuth();
+            Middleware::requireAdmin();
+            $controller = new KnowledgeController();
+            $controller->upload();
+        });
+
+        $router->post('/api/knowledge/delete', function () {
+            Middleware::requireAuth();
+            Middleware::requireAdmin();
+            $controller = new KnowledgeController();
+            $controller->delete();
+        });
+
+        $router->post('/api/knowledge/rename', function () {
+            Middleware::requireAuth();
+            Middleware::requireAdmin();
+            $controller = new KnowledgeController();
+            $controller->rename();
+        });
+
+        $router->get('/api/knowledge/search', function () {
+            Middleware::requireAuth();
+            $controller = new KnowledgeController();
+            $controller->search();
+        });
+
+        $router->get('/api/knowledge/context', function () {
+            $controller = new KnowledgeController();
+            $controller->getContext();
         });
 
         // Admin post routes are handled directly in the views
