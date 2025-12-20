@@ -237,23 +237,28 @@ body {
     gap: 15px;
 }
 
-.profile {
+.extra-options-vertical .profile {
     text-align: center;
     margin-bottom: 20px;
     padding-bottom: 20px;
     border-bottom: 2px solid #f0f0f0;
+    display: block;
+    cursor: default;
+    position: static;
+    margin-right: 0;
 }
 
-.profile-pic {
+.extra-options-vertical .profile-pic {
     width: 100px;
     height: 100px;
     border-radius: 50%;
     margin-bottom: 15px;
     border: 3px solid #667eea;
     object-fit: cover;
+    margin-right: 0;
 }
 
-.profile h2 {
+.extra-options-vertical .profile h2 {
     font-size: 18px;
     color: #333;
     margin-bottom: 5px;
@@ -850,4 +855,268 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+/* Voice button in input area */
+.voice-btn {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    padding: 0;
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+}
+
+.voice-btn:hover {
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+.voice-btn.active {
+    background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+    animation: pulse 1.5s infinite;
+}
+
+.voice-btn.warning-btn {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+}
+
+.voice-btn .warning-badge {
+    display: none;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #f44336;
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 18px;
+    text-align: center;
+    animation: shake 0.5s infinite;
+}
+
+.voice-btn .warning-badge.show {
+    display: block;
+}
+
+/* Language selector */
+.lang-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    margin-top: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.lang-toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.lang-toggle-btn i {
+    font-size: 16px;
+}
+
+/* New chat button */
+.new-chat-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%) !important;
+}
+
+.new-chat-btn:hover {
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4) !important;
+}
+
+/* Search container */
+.search-container {
+    position: relative;
+    width: 100%;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 14px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.search-input:focus {
+    border-color: #667eea;
+}
+
+/* Chat list container */
+.chat-list-container {
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 10px;
+    border-radius: 12px;
+    background: #f8f9fa;
+}
+
+.chat-list {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+}
+
+/* Chat item */
+.chat-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+    position: relative;
+}
+
+/* Divider between chat items */
+.chat-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 12px;
+    right: 12px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e0e0e0 10%, #e0e0e0 90%, transparent);
+}
+
+.chat-item:hover {
+    background: linear-gradient(90deg, #f5f5f5 0%, #fafafa 100%);
+    border-left-color: #667eea40;
+}
+
+.chat-item.active {
+    background: linear-gradient(90deg, #667eea10 0%, #764ba210 100%);
+    border-left-color: #667eea;
+}
+
+.chat-item.active::after {
+    opacity: 0;
+}
+
+.chat-item-content {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Title with fade-out effect for long text */
+.chat-item-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #444;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-right: 15px;
+    position: relative;
+    line-height: 1.4;
+}
+
+/* Fade-out gradient for long titles */
+.chat-item-content::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    background: linear-gradient(90deg, transparent, white);
+    pointer-events: none;
+}
+
+.chat-item:hover .chat-item-content::after {
+    background: linear-gradient(90deg, transparent, #f5f5f5);
+}
+
+.chat-item.active .chat-item-content::after {
+    background: linear-gradient(90deg, transparent, #f0eef8);
+}
+
+.chat-item-title-input {
+    width: 100%;
+    padding: 4px 8px;
+    border: 1px solid #667eea;
+    border-radius: 4px;
+    font-size: 13px;
+    outline: none;
+    background: white;
+}
+
+/* Actions - always visible but subtle */
+.chat-item-actions {
+    display: flex;
+    gap: 4px;
+    margin-left: 8px;
+    opacity: 0.4;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+}
+
+.chat-item:hover .chat-item-actions {
+    opacity: 1;
+}
+
+.chat-item-btn {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+    color: #888;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    transition: all 0.2s ease;
+}
+
+.chat-item-btn:hover {
+    background: #667eea;
+    color: white;
+    transform: scale(1.1);
+}
+
+.chat-item-btn.delete-btn:hover {
+    background: #f44336;
+}
+
+/* Empty state */
+.chat-list-empty {
+    text-align: center;
+    padding: 30px 15px;
+    color: #999;
+    font-size: 14px;
 }

@@ -21,7 +21,189 @@ include("connect.php");
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,maximum-scale=1,user-scalable=no" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-    <link rel="stylesheet" href="<?php echo Helper::url('assets/css/child.css'); ?>">
+    <link rel="stylesheet" href="<?php echo Helper::url('assets/css/child.css'); ?>?v=<?php echo time(); ?>">
+
+    <style>
+    /* Chat list styles - inline to ensure they apply */
+    .chat-list-container {
+        flex: 1;
+        overflow-y: auto;
+        margin-top: 10px;
+        border-radius: 12px;
+        background: #f8f9fa;
+    }
+
+    .chat-list {
+        display: flex;
+        flex-direction: column;
+        padding: 8px;
+    }
+
+    .chat-item {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        padding: 10px 12px !important;
+        background: white !important;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border-left: 3px solid transparent;
+        position: relative;
+        border-radius: 0 !important;
+        border: none !important;
+    }
+
+    .chat-item:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 12px;
+        right: 12px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #e0e0e0 10%, #e0e0e0 90%, transparent);
+    }
+
+    .chat-item:hover {
+        background: linear-gradient(90deg, #f0f0f0 0%, #fafafa 100%) !important;
+        border-left-color: #667eea80 !important;
+    }
+
+    .chat-item.active {
+        background: linear-gradient(90deg, #667eea15 0%, #764ba215 100%) !important;
+        border-left-color: #667eea !important;
+    }
+
+    .chat-item.active::after {
+        opacity: 0;
+    }
+
+    .chat-item-content {
+        flex: 1 !important;
+        min-width: 0 !important;
+        position: relative;
+        overflow: hidden;
+        margin-right: 8px;
+    }
+
+    .chat-item-title {
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        color: #444 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        padding-right: 20px;
+        position: relative;
+        line-height: 1.4;
+    }
+
+    .chat-item-content::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 35px;
+        background: linear-gradient(90deg, transparent, white);
+        pointer-events: none;
+    }
+
+    .chat-item:hover .chat-item-content::after {
+        background: linear-gradient(90deg, transparent, #f5f5f5);
+    }
+
+    .chat-item.active .chat-item-content::after {
+        background: linear-gradient(90deg, transparent, #f0eef8);
+    }
+
+    .chat-item-title-input {
+        width: 100%;
+        padding: 4px 8px;
+        border: 1px solid #667eea;
+        border-radius: 4px;
+        font-size: 13px;
+        outline: none;
+        background: white;
+    }
+
+    .chat-item-actions {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 4px !important;
+        margin-left: auto !important;
+        opacity: 0.35;
+        transition: opacity 0.2s ease;
+        flex-shrink: 0 !important;
+    }
+
+    .chat-item:hover .chat-item-actions {
+        opacity: 1;
+    }
+
+    .chat-item-btn {
+        width: 26px !important;
+        height: 26px !important;
+        min-width: 26px !important;
+        padding: 0 !important;
+        border: none !important;
+        border-radius: 6px !important;
+        background: transparent !important;
+        color: #888 !important;
+        cursor: pointer;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 11px !important;
+        transition: all 0.2s ease;
+    }
+
+    .chat-item-btn:hover {
+        background: #667eea !important;
+        color: white !important;
+        transform: scale(1.1);
+    }
+
+    .chat-item-btn.delete-btn:hover {
+        background: #f44336 !important;
+    }
+
+    .chat-list-empty {
+        text-align: center;
+        padding: 30px 15px;
+        color: #999;
+        font-size: 14px;
+    }
+
+    /* Language toggle button fix */
+    .lang-toggle-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        padding: 8px 16px !important;
+        margin-top: 10px !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 20px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .lang-toggle-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .lang-toggle-btn i {
+        font-size: 16px !important;
+    }
+
+    #lang-toggle-text {
+        color: white !important;
+    }
+    </style>
 </head>
 
 <body>
@@ -104,18 +286,29 @@ include("connect.php");
         <div class="extra-options-vertical">
             <div class="profile">
                 <img src="img/pic4.jpg" alt="Bitty" class="profile-pic" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22%3E%3Crect width=%22150%22 height=%22150%22 fill=%22%236C63FF%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2248%22 fill=%22white%22%3EBitty%3C/text%3E%3C/svg%3E'">
-                <h2 id="profile-name">Bitty is here
-                    <span id="language-badge" class="language-badge">中文</span>
-                </h2>
+                <h2 id="profile-name">Bitty is here</h2>
+                <button id="lang-toggle-btn" class="lang-toggle-btn">
+                    <i class="fa-solid fa-language"></i>
+                    <span id="lang-toggle-text">中文</span>
+                </button>
             </div>
-            <button id="voice-chat-btn">
-                <span class="warning-badge" id="warning-badge">!</span>
-                <i class="fa-solid fa-microphone"></i> <span id="voice-chat-btn-text">Voice Chat</span>
-            </button>
-            <button id="switch-lang-btn"><i class="fa-solid fa-language"></i> <span id="switch-lang-btn-text">Switch Language</span></button>
-            <button id="clear-history-btn"><i class="fa-solid fa-trash"></i> <span id="clear-history-btn-text">Clear History</span></button>
 
-            <button><i class="fa-solid fa-gift"></i><span id="creative-corner-btn-text">Creative Corner</span></button>
+            <!-- Action buttons -->
+            <button id="new-chat-btn" class="action-btn new-chat-btn">
+                <i class="fa-solid fa-plus"></i>
+                <span id="new-chat-btn-text">开始新对话</span>
+            </button>
+            <div class="search-container">
+                <i class="fa-solid fa-search search-icon"></i>
+                <input type="text" id="search-input" placeholder="搜索对话..." class="search-input">
+            </div>
+
+            <!-- Chat list -->
+            <div class="chat-list-container">
+                <div id="chat-list" class="chat-list">
+                    <!-- Chat items will be inserted here -->
+                </div>
+            </div>
         </div>
     </div>
 
@@ -139,6 +332,10 @@ include("connect.php");
 
         <div class="input-area">
             <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off">
+            <button id="voice-btn" class="voice-btn" title="Voice Chat">
+                <span class="warning-badge" id="warning-badge">!</span>
+                <i class="fa-solid fa-microphone"></i>
+            </button>
             <button id="send-btn">Send</button>
             <button id="stop-btn">Stop</button>
         </div>
@@ -210,16 +407,12 @@ include("connect.php");
     <script>
         const DEEPSEEK_API_KEY = "<?= $_ENV['LLM_API_KEY'] ?>";
         const DEEPSEEK_API_URL = "<?= $_ENV['LLM_API_URL'] ?>";
+        const API_BASE_URL = "<?= Helper::url('api/conversations') ?>";
 
         // Language configuration - centralized translations
         const translations = {
             'zh-CN': {
                 chatTitle: 'Bitty 聊天室',
-                voiceChat: '语音聊天',
-                stopRecording: '停止录音',
-                switchLanguage: '切换语言',
-                clearHistory: '清除历史',
-                creativeCorner: '创意角落',
                 profileName: 'Bitty 在这里',
                 messagePlaceholder: '输入消息...',
                 send: '发送',
@@ -238,18 +431,16 @@ include("connect.php");
                 micDenied: '麦克风权限被拒绝<br>请点击地址栏的🔒图标允许麦克风访问',
                 networkError: '网络错误，请检查网络连接',
                 recordCancelled: '录音已取消',
-                clearConfirm: '确定要清除对话历史吗?',
-                historyCleared: '对话历史已清除。我们可以重新开始聊天!',
                 responseInterrupted: '响应已中断',
-                errorOccurred: '抱歉,发生错误。请重试。'
+                errorOccurred: '抱歉,发生错误。请重试。',
+                newChat: '开始新对话',
+                searchPlaceholder: '搜索对话...',
+                newChatTitle: '新对话',
+                noChats: '暂无对话',
+                deleteConfirm: '确定要删除这个对话吗？'
             },
             'en-US': {
                 chatTitle: 'Bitty Chat',
-                voiceChat: 'Voice Chat',
-                stopRecording: 'Stop Recording',
-                switchLanguage: 'Switch Language',
-                clearHistory: 'Clear History',
-                creativeCorner: 'Creative Corner',
                 profileName: 'Bitty is here',
                 messagePlaceholder: 'Type a message...',
                 send: 'Send',
@@ -268,10 +459,13 @@ include("connect.php");
                 micDenied: 'Microphone permission denied<br>Please click the 🔒 icon in the address bar to allow microphone access',
                 networkError: 'Network error, please check your connection',
                 recordCancelled: 'Recording cancelled',
-                clearConfirm: 'Are you sure you want to clear the conversation history?',
-                historyCleared: 'History cleared. Let\'s start fresh!',
                 responseInterrupted: 'Response interrupted',
-                errorOccurred: 'Sorry, an error occurred. Please try again.'
+                errorOccurred: 'Sorry, an error occurred. Please try again.',
+                newChat: 'New Chat',
+                searchPlaceholder: 'Search chats...',
+                newChatTitle: 'New Chat',
+                noChats: 'No chats yet',
+                deleteConfirm: 'Are you sure you want to delete this chat?'
             }
         };
 
@@ -282,16 +476,22 @@ include("connect.php");
         const stopButton = document.getElementById("stop-btn");
         const messageInput = document.getElementById("message-input");
         const chatBox = document.getElementById("chat-box");
-        const voiceChatBtn = document.getElementById("voice-chat-btn");
+        const voiceBtn = document.getElementById("voice-btn");
         const warningBadge = document.getElementById("warning-badge");
-        const switchLangBtn = document.getElementById("switch-lang-btn");
-        const clearHistoryBtn = document.getElementById("clear-history-btn");
+        const langToggleBtn = document.getElementById("lang-toggle-btn");
+        const langToggleText = document.getElementById("lang-toggle-text");
+        const newChatBtn = document.getElementById("new-chat-btn");
+        const searchInput = document.getElementById("search-input");
+        const chatList = document.getElementById("chat-list");
         const recordingIndicator = document.getElementById("recording-indicator");
         const recordingText = document.getElementById("recording-text");
-        const languageBadge = document.getElementById("language-badge");
         const typingIndicator = document.getElementById("typing-indicator");
         const helpModal = document.getElementById("help-modal");
 
+        // Chat management
+        let allChats = [];
+        let currentChatId = null;
+        let currentChatAutoRenamed = false;
         let conversationHistory = [];
         let currentLanguage = 'zh-CN';
         let isRecording = false;
@@ -307,20 +507,23 @@ include("connect.php");
         // Update all UI text elements
         function updateUI() {
             document.getElementById('chat-title').textContent = t('chatTitle');
-            document.getElementById('voice-chat-btn-text').textContent = t('voiceChat');
-            document.getElementById('switch-lang-btn-text').textContent = t('switchLanguage');
-            document.getElementById('clear-history-btn-text').textContent = t('clearHistory');
-            document.getElementById('creative-corner-btn-text').textContent = t('creativeCorner');
             document.getElementById('message-input').placeholder = t('messagePlaceholder');
             document.getElementById('send-btn').textContent = t('send');
             document.getElementById('stop-btn').textContent = t('stop');
             document.getElementById('recording-hint').textContent = t('recordingHint');
 
-            languageBadge.textContent = currentLanguage === 'zh-CN' ? '中文' : 'English';
-            languageBadge.style.backgroundColor = currentLanguage === 'zh-CN' ? '#4CAF50' : '#2196F3';
+            // Update profile name
+            document.getElementById('profile-name').textContent = t('profileName');
 
-            const langBadgeHtml = `<span id="language-badge" class="language-badge" style="background-color: ${currentLanguage === 'zh-CN' ? '#4CAF50' : '#2196F3'}">${currentLanguage === 'zh-CN' ? '中文' : 'English'}</span>`;
-            document.getElementById('profile-name').innerHTML = t('profileName') + ' ' + langBadgeHtml;
+            // Update language toggle button - show current language
+            langToggleText.textContent = currentLanguage === 'zh-CN' ? '中文' : 'English';
+
+            // Update new chat button and search
+            document.getElementById('new-chat-btn-text').textContent = t('newChat');
+            searchInput.placeholder = t('searchPlaceholder');
+
+            // Re-render chat list with updated language
+            renderChatList();
 
             checkSecurityContext();
         }
@@ -365,7 +568,7 @@ include("connect.php");
 
                 // Show warning badge
                 warningBadge.classList.add('show');
-                voiceChatBtn.classList.add('warning-btn');
+                voiceBtn.classList.add('warning-btn');
 
                 // Add system message (only once, not intrusive)
                 console.warn("⚠️ 语音功能需要HTTPS或localhost环境");
@@ -380,7 +583,7 @@ include("connect.php");
 
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
                 warningBadge.classList.add('show');
-                voiceChatBtn.classList.add('warning-btn');
+                voiceBtn.classList.add('warning-btn');
 
                 console.warn("⚠️ 浏览器不支持语音识别");
 
@@ -474,7 +677,7 @@ include("connect.php");
 
             // Hide warning badge when voice is available
             warningBadge.classList.remove('show');
-            voiceChatBtn.classList.remove('warning-btn');
+            voiceBtn.classList.remove('warning-btn');
 
             console.log("✅ 语音识别已就绪");
             voiceAvailable = true;
@@ -498,51 +701,317 @@ include("connect.php");
 
         window.addEventListener('load', () => {
             console.log("🚀 页面加载完成");
+            initChats();
             updateUI();
             initSpeechRecognition();
         });
 
-        switchLangBtn.addEventListener("click", () => {
+        // Language toggle button click handler
+        langToggleBtn.addEventListener("click", () => {
             currentLanguage = currentLanguage === 'zh-CN' ? 'en-US' : 'zh-CN';
-
             if (recognition) {
                 recognition.lang = currentLanguage;
             }
-
             updateUI();
         });
 
+        // ========== Chat Management Functions ==========
 
-        clearHistoryBtn.addEventListener("click", () => {
-            const confirmMsg = currentLanguage === 'zh-CN' ?
-                "确定要清除对话历史吗?" :
-                "Are you sure you want to clear the conversation history?";
+        // API helper function
+        async function apiRequest(endpoint, method = 'GET', data = null) {
+            const url = API_BASE_URL + endpoint;
+            console.log(`API Request: ${method} ${url}`, data);
 
-            if (confirm(confirmMsg)) {
-                console.log("清除对话历史");
-
-                conversationHistory = [];
-
-                if (isProcessing) {
-                    stopCurrentResponse();
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
                 }
-
-                chatBox.innerHTML = '';
-                chatBox.appendChild(typingIndicator);
-
-                const clearedMsg = currentLanguage === 'zh-CN' ?
-                    "对话历史已清除。我们可以重新开始聊天!" :
-                    "History cleared. Let's start fresh!";
-                addMessage(clearedMsg, 'bot');
-
-                sendButton.disabled = false;
-                isProcessing = false;
-
-                console.log("清除完成,聊天功能已恢复");
+            };
+            if (data) {
+                options.body = JSON.stringify(data);
             }
+
+            try {
+                const response = await fetch(url, options);
+                console.log(`API Response status: ${response.status}`);
+
+                const text = await response.text();
+                console.log(`API Response body:`, text);
+
+                // Try to parse as JSON
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Failed to parse JSON response:', text);
+                    return { error: 'Invalid JSON response', raw: text };
+                }
+            } catch (error) {
+                console.error('API Request failed:', error);
+                throw error;
+            }
+        }
+
+        // Create a new chat
+        async function createNewChat() {
+            console.log('createNewChat called', { currentChatId, conversationHistoryLength: conversationHistory.length });
+
+            // If current chat is empty (no messages), don't create new one
+            if (currentChatId && conversationHistory.length === 0) {
+                // Already have an empty chat, just ensure it's highlighted
+                clearChatBox();
+                renderChatList();
+                console.log('Current chat is empty, not creating new one');
+                return;
+            }
+
+            // Create a new chat
+            try {
+                console.log('Creating new chat via API...');
+                const result = await apiRequest('/create', 'POST', { title: t('newChatTitle') });
+                console.log('Create result:', result);
+                if (result.id) {
+                    const newChat = {
+                        id: result.id,
+                        title: result.title,
+                        auto_renamed: false
+                    };
+                    allChats.unshift(newChat);
+                    currentChatId = result.id;
+                    currentChatAutoRenamed = false;
+                    conversationHistory = [];
+                    renderChatList();
+                    clearChatBox();
+                    console.log('New chat created successfully:', newChat);
+                } else if (result.error) {
+                    console.error('API error:', result.error);
+                    alert('Failed to create chat: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Failed to create chat:', error);
+                alert('Failed to create chat. Please check the console for details.');
+            }
+        }
+
+        // Switch to a chat
+        async function switchToChat(chatId) {
+            if (isProcessing) {
+                stopCurrentResponse();
+            }
+
+            try {
+                const result = await apiRequest('/get?id=' + chatId);
+                if (result.id) {
+                    currentChatId = result.id;
+                    currentChatAutoRenamed = result.auto_renamed == 1;
+                    conversationHistory = (result.messages || []).map(m => ({
+                        role: m.role,
+                        content: m.content
+                    }));
+                    renderChatList();
+                    renderChatMessages();
+                }
+            } catch (error) {
+                console.error('Failed to switch chat:', error);
+            }
+        }
+
+        // Delete a chat
+        async function deleteChat(chatId) {
+            if (!confirm(t('deleteConfirm'))) return;
+
+            try {
+                const result = await apiRequest('/delete', 'POST', { id: chatId });
+                if (result.success) {
+                    allChats = allChats.filter(c => c.id != chatId);
+
+                    if (currentChatId == chatId) {
+                        if (allChats.length > 0) {
+                            await switchToChat(allChats[0].id);
+                        } else {
+                            await createNewChat();
+                        }
+                    } else {
+                        renderChatList();
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to delete chat:', error);
+            }
+        }
+
+        // Rename a chat
+        function startRenameChat(chatId) {
+            const chatItem = document.querySelector(`[data-chat-id="${chatId}"]`);
+            const titleEl = chatItem.querySelector('.chat-item-title');
+            const currentTitle = titleEl.textContent;
+
+            titleEl.innerHTML = `<input type="text" class="chat-item-title-input" value="${currentTitle}">`;
+            const input = titleEl.querySelector('input');
+            input.focus();
+            input.select();
+
+            const finishRename = async () => {
+                const newTitle = input.value.trim() || currentTitle;
+                try {
+                    await apiRequest('/update', 'POST', {
+                        id: chatId,
+                        title: newTitle,
+                        auto_renamed: 1
+                    });
+                    const chat = allChats.find(c => c.id == chatId);
+                    if (chat) {
+                        chat.title = newTitle;
+                        chat.auto_renamed = true;
+                    }
+                    if (chatId == currentChatId) {
+                        currentChatAutoRenamed = true;
+                    }
+                } catch (error) {
+                    console.error('Failed to rename chat:', error);
+                }
+                renderChatList();
+            };
+
+            input.addEventListener('blur', finishRename);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    finishRename();
+                }
+                if (e.key === 'Escape') {
+                    renderChatList();
+                }
+            });
+        }
+
+        // Auto-rename chat based on first message
+        async function autoRenameChat(message) {
+            // Check for length === 1 because we call this after adding the first message
+            if (!currentChatAutoRenamed && conversationHistory.length === 1) {
+                const newTitle = message.length > 20 ? message.substring(0, 20) + '...' : message;
+                try {
+                    await apiRequest('/update', 'POST', {
+                        id: currentChatId,
+                        title: newTitle,
+                        auto_renamed: 1
+                    });
+                    const chat = allChats.find(c => c.id == currentChatId);
+                    if (chat) {
+                        chat.title = newTitle;
+                        chat.auto_renamed = true;
+                    }
+                    currentChatAutoRenamed = true;
+                    renderChatList();
+                } catch (error) {
+                    console.error('Failed to auto-rename chat:', error);
+                }
+            }
+        }
+
+        // Save a message to current conversation
+        async function saveMessage(role, content) {
+            if (!currentChatId) return;
+            try {
+                await apiRequest('/message', 'POST', {
+                    conversation_id: currentChatId,
+                    role: role,
+                    content: content
+                });
+            } catch (error) {
+                console.error('Failed to save message:', error);
+            }
+        }
+
+        // Clear chat box
+        function clearChatBox() {
+            chatBox.innerHTML = '';
+            chatBox.appendChild(typingIndicator);
+        }
+
+        // Render chat messages from history
+        function renderChatMessages() {
+            clearChatBox();
+            conversationHistory.forEach(msg => {
+                addMessage(msg.content, msg.role === 'user' ? 'user' : 'bot', false);
+            });
+        }
+
+        // Render chat list
+        function renderChatList(filter = '') {
+            const filterLower = filter.toLowerCase();
+            const filteredChats = filter
+                ? allChats.filter(c => c.title.toLowerCase().includes(filterLower))
+                : allChats;
+
+            if (filteredChats.length === 0) {
+                chatList.innerHTML = `<div class="chat-list-empty">${t('noChats')}</div>`;
+                return;
+            }
+
+            chatList.innerHTML = filteredChats.map(chat => `
+                <div class="chat-item ${chat.id == currentChatId ? 'active' : ''}" data-chat-id="${chat.id}">
+                    <div class="chat-item-content">
+                        <div class="chat-item-title">${escapeHtml(chat.title)}</div>
+                    </div>
+                    <div class="chat-item-actions">
+                        <button class="chat-item-btn rename-btn" title="Rename" onclick="event.stopPropagation(); startRenameChat(${chat.id})">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button class="chat-item-btn delete-btn" title="Delete" onclick="event.stopPropagation(); deleteChat(${chat.id})">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add click handlers for switching chats
+            chatList.querySelectorAll('.chat-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    switchToChat(item.dataset.chatId);
+                });
+            });
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // New chat button click handler
+        newChatBtn.addEventListener("click", createNewChat);
+
+        // Search input handler
+        let searchTimeout = null;
+        searchInput.addEventListener("input", (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                renderChatList(e.target.value);
+            }, 300);
         });
 
-        voiceChatBtn.addEventListener("click", () => {
+        // Initialize: load chats from server
+        async function initChats() {
+            try {
+                const result = await apiRequest('');
+                allChats = result.conversations || [];
+
+                if (allChats.length === 0) {
+                    await createNewChat();
+                } else {
+                    // Load first chat
+                    await switchToChat(allChats[0].id);
+                }
+            } catch (error) {
+                console.error('Failed to load chats:', error);
+                // Fallback: create new chat
+                await createNewChat();
+            }
+        }
+
+        voiceBtn.addEventListener("click", () => {
             // If voice is not available, show help modal
             if (!voiceAvailable) {
                 showHelpModal();
@@ -561,9 +1030,7 @@ include("connect.php");
             try {
                 console.log("🎤 开始录音...");
 
-                voiceChatBtn.classList.add('active');
-                const stopRecText = currentLanguage === 'zh-CN' ? '停止录音' : 'Stop Recording';
-                voiceChatBtn.innerHTML = '<i class="fa-solid fa-stop"></i> ' + stopRecText;
+                voiceBtn.classList.add('active');
                 recordingIndicator.classList.add('active');
 
                 const langText = currentLanguage === 'zh-CN' ?
@@ -585,9 +1052,11 @@ include("connect.php");
 
         function stopRecording() {
             isRecording = false;
-            voiceChatBtn.classList.remove('active');
-            const voiceChatText = currentLanguage === 'zh-CN' ? '语音聊天' : 'Voice Chat';
-            voiceChatBtn.innerHTML = '<span class="warning-badge' + (!voiceAvailable ? ' show' : '') + '" id="warning-badge">!</span><i class="fa-solid fa-microphone"></i> <span id="voice-chat-btn-text">' + voiceChatText + '</span>';
+            voiceBtn.classList.remove('active');
+            // Restore warning badge if voice not available
+            if (!voiceAvailable) {
+                warningBadge.classList.add('show');
+            }
             recordingIndicator.classList.remove('active');
 
             try {
@@ -646,7 +1115,7 @@ include("connect.php");
             }
         }
 
-        function addMessage(text, sender) {
+        function addMessage(text, sender, save = true) {
             const messageDiv = document.createElement("div");
             messageDiv.classList.add("message");
 
@@ -704,6 +1173,10 @@ include("connect.php");
                 role: "user",
                 content: userMessage
             });
+
+            // Auto-rename chat based on first message and save user message
+            autoRenameChat(userMessage);
+            saveMessage('user', userMessage);
 
             abortController = new AbortController();
 
@@ -776,6 +1249,9 @@ include("connect.php");
                     role: "assistant",
                     content: fullResponse
                 });
+
+                // Save AI response message
+                saveMessage('assistant', fullResponse);
 
                 // Only read aloud if this is a voice chat
                 if (isVoiceChat) {

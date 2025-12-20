@@ -76,6 +76,54 @@ php database/migrate.php
 
 This command will create the following database structure:
 - **users** table: Stores user accounts with authentication and verification data
+- **conversations** table: Stores chat conversation metadata for each user
+- **messages** table: Stores individual messages within conversations
+
+### Database Schema
+
+#### Users Table
+```sql
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('child', 'parent', 'admin') DEFAULT 'child' NOT NULL,
+    verification_code INT NULL,
+    verification_status ENUM('pending', 'verified') DEFAULT 'pending',
+    verification_requested_at TIMESTAMP NULL,
+    request_attempts INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### Conversations Table
+```sql
+CREATE TABLE conversations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL DEFAULT 'New Chat',
+    auto_renamed TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_user_id (user_id),
+    INDEX idx_updated_at (updated_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+```
+
+#### Messages Table
+```sql
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    conversation_id INT NOT NULL,
+    role ENUM('user', 'assistant', 'system') NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE,
+    INDEX idx_conversation_id (conversation_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+```
 
 **Optional - Rollback Migrations:**
 

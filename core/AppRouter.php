@@ -8,6 +8,7 @@ use App\Controllers\SignUp;
 use App\Controllers\SignIn;
 use App\Controllers\UpdateProfile;
 use App\Controllers\KnowledgeController;
+use App\Controllers\ConversationController;
 use Utils\Helper;
 
 use Bramus\Router\Router;
@@ -20,6 +21,11 @@ class AppRouter
     {
         if (!self::$router) {
             self::$router = new Router();
+            // Set base path from config (removes it from REQUEST_URI for route matching)
+            $basePath = rtrim(Config::get('base_url', '/'), '/');
+            if ($basePath && $basePath !== '/') {
+                self::$router->setBasePath($basePath);
+            }
         }
         return self::$router;
     }
@@ -180,6 +186,49 @@ class AppRouter
         $router->get('/api/knowledge/context', function () {
             $controller = new KnowledgeController();
             $controller->getContext();
+        });
+
+        // Conversation API routes
+        $router->get('/api/conversations', function () {
+            Middleware::requireAuth();
+            $controller = new ConversationController();
+            $controller->list();
+        });
+
+        $router->post('/api/conversations/create', function () {
+            Middleware::requireAuth();
+            $controller = new ConversationController();
+            $controller->create();
+        });
+
+        $router->get('/api/conversations/get', function () {
+            Middleware::requireAuth();
+            $controller = new ConversationController();
+            $controller->get();
+        });
+
+        $router->post('/api/conversations/update', function () {
+            Middleware::requireAuth();
+            $controller = new ConversationController();
+            $controller->update();
+        });
+
+        $router->post('/api/conversations/delete', function () {
+            Middleware::requireAuth();
+            $controller = new ConversationController();
+            $controller->delete();
+        });
+
+        $router->post('/api/conversations/message', function () {
+            Middleware::requireAuth();
+            $controller = new ConversationController();
+            $controller->addMessage();
+        });
+
+        $router->get('/api/conversations/search', function () {
+            Middleware::requireAuth();
+            $controller = new ConversationController();
+            $controller->search();
         });
 
         // Admin post routes are handled directly in the views
