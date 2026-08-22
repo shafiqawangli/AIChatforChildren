@@ -1,0 +1,60 @@
+<?php
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Core\Database;
+
+$pdo = Database::getInstance(); 
+
+$files = glob(__DIR__ . "/migrations/*.php");
+
+$rollback = in_array('--down', $argv);
+
+usort($files, function ($a, $b) {
+    $priorityMap = [
+        'CreateUsersTable' => 10,
+        'AddChildAccountFieldsToUsersTable' => 20,
+        'CreateChildDailyUsageTable' => 30,
+        'CreateChildDailyLoginsTable' => 35,
+        'CreateConversationsTable' => 40,
+        'CreateChildReportsTables' => 45,
+        'CreateKnowledgeBaseTables' => 50,
+    ];
+
+    $aName = pathinfo($a, PATHINFO_FILENAME);
+    $bName = pathinfo($b, PATHINFO_FILENAME);
+
+    $aPriority = $priorityMap[$aName] ?? 100;
+    $bPriority = $priorityMap[$bName] ?? 100;
+
+    if ($aPriority === $bPriority) {
+        return strcmp($aName, $bName);
+    }
+
+    return $aPriority <=> $bPriority;
+});
+
+if ($rollback) {
+    $files = array_reverse($files);
+}
+
+foreach ($files as $file) {
+    require_once $file;
+
+    $filename = pathinfo($file, PATHINFO_FILENAME);
+    $className = "Database\\Migrations\\$filename";
+
+    if (class_exists($className)) {
+        echo $rollback ? "Rolling back: $className\n" : "Running migration: $className\n";
+        $migration = new $className();
+        
+        if ($rollback) {
+            $migration->down(); 
+        } else {
+            $migration->up(); 
+        }
+    } else {
+        echo "Error: Migration class $className not found in $file\n";
+    }
+}
+
+echo $rollback ? "Rollback completed.\n" : "All migrations executed successfully.\n";

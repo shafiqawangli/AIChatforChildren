@@ -1,0 +1,5 @@
+vendor/
+.claude
+server.log
+
+.env
